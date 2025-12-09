@@ -2,8 +2,8 @@ import java.util.ArrayList;
 
 /**
  * An Integer Binary Search Tree
- * @author: Your Name Here
- * @version: Date
+ * @author: Eshu Vinnakota
+ * @version: Dec 9, 2025
  */
 
 public class BST {
@@ -48,7 +48,8 @@ public class BST {
      */
     public boolean search(int val) {
         // TODO: Complete the search function
-        return false;
+        if (root == null) return false;
+        return root.search(val);
     }
 
     /**
@@ -56,7 +57,9 @@ public class BST {
      */
     public ArrayList<BSTNode> getInorder() {
         // TODO: Complete inorder traversal
-        return null;
+        ArrayList<BSTNode> results = new ArrayList<>();
+        if (root != null) root.traverse(results,true, false);
+        return results;
     }
 
     /**
@@ -64,7 +67,9 @@ public class BST {
      */
     public ArrayList<BSTNode> getPreorder() {
         // TODO: Complete preorder traversal
-        return null;
+        ArrayList<BSTNode> results = new ArrayList<>();
+        if (root != null) root.traverse(results,false, false);
+        return results;
     }
 
     /**
@@ -72,7 +77,9 @@ public class BST {
      */
     public ArrayList<BSTNode> getPostorder() {
         // TODO: Complete postorder traversal
-        return null;
+        ArrayList<BSTNode> results = new ArrayList<>();
+        if (root != null) root.traverse(results,true, true);
+        return results;
     }
 
     /**
@@ -83,6 +90,11 @@ public class BST {
      */
     public void insert(int val) {
         // TODO: Complete insert
+        if (root == null) {
+            root = new BSTNode(val);
+        } else {
+            root.insert(val);
+        }
     }
 
     /**
