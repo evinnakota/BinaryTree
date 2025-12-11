@@ -38,7 +38,7 @@ public class BST {
         for(int i=0; i<nodes.size()-1; i++) {
             System.out.print(nodes.get(i) + "-");
         }
-        System.out.println(nodes.get(nodes.size()-1));
+        System.out.println(nodes.getLast());
     }
 
     /**
@@ -47,39 +47,67 @@ public class BST {
      * @return true if val is in the tree, false otherwise
      */
     public boolean search(int val) {
-        // TODO: Complete the search function
-        if (root == null) return false;
-        return root.search(val);
+        return searchHelper(root, val);
+    }
+
+    private boolean searchHelper(BSTNode node, int val) {
+        if (node == null) return false;
+
+        if (val == node.getVal()) return true;
+        else if (val < node.getVal()) return searchHelper(node.getLeft(), val);
+        else return searchHelper(node.getRight(), val);
+    }
+
+
+
+    public void traverse(ArrayList<BSTNode> list, boolean l, boolean r) {
+        if (l && root.getLeft() != null) traverse(list, l, r);
+        if (r && root.getRight() != null) traverse(list, l, r);
+        list.add(this.getRoot());
+        if (!l && root.getLeft() != null) traverse(list, l, r);
+        if (!r && root.getRight() != null) traverse(list, l, r);
     }
 
     /**
      * @return ArrayList of BSTNodes in inorder
      */
+
     public ArrayList<BSTNode> getInorder() {
-        // TODO: Complete inorder traversal
         ArrayList<BSTNode> results = new ArrayList<>();
-        if (root != null) root.traverse(results,true, false);
+        inorderHelper(root, results);
         return results;
     }
 
-    /**
-     * @return ArrayList of BSTNodes in preorder
-     */
+    private void inorderHelper(BSTNode node, ArrayList<BSTNode> list) {
+        if (node == null) return;
+        inorderHelper(node.getLeft(), list);
+        list.add(node);
+        inorderHelper(node.getRight(), list);
+    }
+
     public ArrayList<BSTNode> getPreorder() {
-        // TODO: Complete preorder traversal
         ArrayList<BSTNode> results = new ArrayList<>();
-        if (root != null) root.traverse(results,false, false);
+        preorderHelper(root, results);
         return results;
     }
 
-    /**
-     * @return ArrayList of BSTNodes in postorder
-     */
+    private void preorderHelper(BSTNode node, ArrayList<BSTNode> list) {
+        if (node == null) return;
+        list.add(node);
+        preorderHelper(node.getLeft(), list);
+        preorderHelper(node.getRight(), list);
+    }
     public ArrayList<BSTNode> getPostorder() {
-        // TODO: Complete postorder traversal
         ArrayList<BSTNode> results = new ArrayList<>();
-        if (root != null) root.traverse(results,true, true);
+        postorderHelper(root, results);
         return results;
+    }
+
+    private void postorderHelper(BSTNode node, ArrayList<BSTNode> list) {
+        if (node == null) return;
+        postorderHelper(node.getLeft(), list);
+        postorderHelper(node.getRight(), list);
+        list.add(node);
     }
 
     /**
@@ -89,22 +117,32 @@ public class BST {
      * @param val The value ot insert
      */
     public void insert(int val) {
-        // TODO: Complete insert
-        if (root == null) {
-            root = new BSTNode(val);
-        } else {
-            root.insert(val);
-        }
+        root = insertHelper(root, val);
     }
 
-    /**
-     * Determines if the current BST is
-     * a valid BST.
-     * @return true if valid false otherwise
-     */
+    public BSTNode insertHelper(BSTNode node, int val) {
+        if (node == null) return new BSTNode(val);
+        if (val == node.getVal()) return node;
+        else if (val < node.getVal()) node.setLeft(insertHelper(node.getLeft(), val));
+        else node.setRight(insertHelper(node.getRight(), val));
+        return node;  // return the (possibly unchanged) subtree root
+    }
+
+
+        /**
+         * Determines if the current BST is
+         * a valid BST.
+         * @return true if valid false otherwise
+         */
     public boolean isValidBST() {
         // TODO: Optional Challenge!
-        return false;
+        return isValidBSTHelper(root, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+
+    public boolean isValidBSTHelper(BSTNode node, int min, int max) {
+        if (node == null) return true;
+        if (node.getVal() <= min || node.getVal() >= max) return false;
+        return isValidBSTHelper(node.getLeft(), min, node.getVal()) && isValidBSTHelper(node.getRight(), node.getVal(), max);
     }
 
     public static void main(String[] args) {
@@ -134,5 +172,8 @@ public class BST {
         System.out.println("\nInorder traversal of binary tree is");
         sol = tree.getInorder();
         printNodes(sol);
+
+        System.out.println("Is valid BST? " + tree.isValidBST());
+
     }
 }
